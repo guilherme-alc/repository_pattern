@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using RepositoryPattern.Data;
+using RepositoryPattern.Repositories;
+using RepositoryPattern.Repositories.Abstractions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,8 @@ builder.Services.AddSwaggerGen();
 var connectioString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(opts => 
     opts.UseSqlServer(connectioString));
+
+builder.Services.AddTransient<IProductRepository, ProductRepository>();
 
 var app = builder.Build();
 
