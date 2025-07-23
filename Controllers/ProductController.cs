@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using RepositoryPattern.Models;
 using RepositoryPattern.Repositories.Abstractions;
 
@@ -10,9 +9,11 @@ namespace RepositoryPattern.Controllers
     public class ProductController : ControllerBase
     {
         public readonly IProductRepository _repository;
-        public ProductController(IProductRepository repository)
+        private readonly IUnitOfWork _unitOfWork;
+        public ProductController(IProductRepository repository, IUnitOfWork unitOfWork)
         {
             _repository = repository;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet]
@@ -44,6 +45,7 @@ namespace RepositoryPattern.Controllers
             }
 
             var result = await _repository.Create(product, cancellationToken);
+            await _unitOfWork.CommitWithTransactionAsync();
             return CreatedAtAction(nameof(GetProductById), new { id = result.Id }, result);
         }
 
@@ -58,6 +60,7 @@ namespace RepositoryPattern.Controllers
                 return NotFound($"Produto com id {id} não encontrado.");
 
             await _repository.Update(product, cancellationToken);
+            await _unitOfWork.CommitWithTransactionAsync();
             return NoContent();
         }
 
@@ -72,6 +75,7 @@ namespace RepositoryPattern.Controllers
             }
 
             var result = await _repository.Delete(product, cancellationToken);
+            await _unitOfWork.CommitWithTransactionAsync();
 
             return NoContent();
         }

@@ -14,6 +14,7 @@ builder.Services.AddDbContext<AppDbContext>(opts =>
     opts.UseSqlServer(connectioString));
 
 builder.Services.AddTransient<IProductRepository, ProductRepository>();
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();
 
