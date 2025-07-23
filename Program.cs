@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using RepositoryPattern;
 using RepositoryPattern.Data;
 using RepositoryPattern.Repositories;
 using RepositoryPattern.Repositories.Abstractions;
@@ -13,8 +14,7 @@ var connectioString = builder.Configuration.GetConnectionString("DefaultConnecti
 builder.Services.AddDbContext<AppDbContext>(opts => 
     opts.UseSqlServer(connectioString));
 
-builder.Services.AddTransient<IProductRepository, ProductRepository>();
-builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+builder.Services.AddRepositories();
 
 var app = builder.Build();
 
